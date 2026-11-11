@@ -1,94 +1,134 @@
-# Universal AI API Key Checker
+# Anthropic Claude API Key Checker
 
-A fast, lightweight, and secure tool to verify AI API keys, inspect model permissions, test generation, and measure API response latency across **Anthropic Claude**, **OpenAI**, **Google Gemini**, and **Groq**.
+A simple Python utility to test whether an Anthropic API key is valid and working by sending a minimal test request to Claude.
 
----
-
-## Features
-
-- 🔒 **Zero Hardcoded Secrets:** Automatically loads keys from environment variables, `.env`, interactive prompt, or CLI arguments.
-- 🤖 **Auto-Provider Detection:** Automatically identifies whether a key belongs to Anthropic (`sk-ant-`), OpenAI (`sk-`), Gemini (`AIzaSy`), or Groq (`gsk_`).
-- 🛡️ **Safe Masking:** All API keys are masked in console output (e.g. `sk-ant-usr-1...TQAA`).
-- ⚡ **Latency & Performance:** Displays round-trip latency (in milliseconds) for authentication and inference calls.
-- 📋 **Model Permissions:** Queries the provider's API and lists accessible models.
-- 🧪 **Live Generation Test:** Tests message completion (compatible with thinking tokens and standard outputs).
-- 📁 **Batch Verification:** Check a list of keys stored in a `.txt` file (one per line) with a clean summary report.
-- 📦 **Zero Mandatory Dependencies:** Uses Python's built-in standard library (`urllib`) with zero mandatory external dependencies.
+![Terminal Output](assets/screenshot.png)
 
 ---
 
-## Supported Providers
+## Prerequisites
 
-| Provider | Key Format | Model Discovery | Generation Test |
-| :--- | :--- | :--- | :--- |
-| **Anthropic Claude** | `sk-ant-...` | Yes | Yes (Claude 3.5 Sonnet / Haiku) |
-| **OpenAI** | `sk-...` / `sk-proj-...` | Yes | Yes |
-| **Google Gemini** | `AIzaSy...` | Yes | Yes |
-| **Groq** | `gsk_...` | Yes | Yes |
+Before starting, ensure you have:
+1. Python 3.10 or higher installed on your computer.
+2. A terminal (Command Prompt, PowerShell, or macOS/Linux terminal).
+3. An Anthropic API key from console.anthropic.com.
 
 ---
 
-## Getting Started
+## Step 1: Download the Project
 
-### 1. Clone the Repository
+Clone the repository using Git:
+
 ```bash
 git clone https://github.com/your-username/api-checker.git
 cd api-checker
 ```
 
-### 2. (Optional) Install SDK Dependencies
-The core tool works out of the box with standard Python 3. If you want to use the official Anthropic SDK for additional scripts:
-```bash
-pip install -r requirements.txt
-```
+If you downloaded the code as a ZIP file, extract it and navigate into the folder:
 
-### 3. Configure Your Environment (Optional)
-Copy `.env.example` to `.env`:
-```bash
-cp .env.example .env
+```cmd
+cd "C:\Users\YourUsername\path\to\api checker"
 ```
-Open `.env` and set your key:
-```env
-ANTHROPIC_API_KEY=your_anthropic_api_key_here
-```
-
-*(Note: `.env` is listed in `.gitignore` and will never be pushed to your repository).*
 
 ---
 
-## Usage
+## Step 2: Install Required Dependencies
 
-### Interactive Mode
-Run the tool without arguments:
-```bash
-python api_checker.py
-```
-You can choose to check a single key, test your `.env` key, or verify a batch file of keys.
+The script uses the official Anthropic Python library. Install it using pip:
 
-### Single Key via CLI (Auto-detects Provider)
-Pass any API key directly in your terminal:
-```bash
-python api_checker.py "sk-ant-usr-your-anthropic-key"
-```
-Or an OpenAI key:
-```bash
-python api_checker.py "sk-proj-your-openai-key"
+```cmd
+pip install anthropic
 ```
 
-### Batch Check Multiple Keys
-Pass a text file with one key per line:
-```bash
-python api_checker.py keys.txt
+Or install from the requirements file:
+
+```cmd
+pip install -r requirements.txt
 ```
 
-### Quick Standalone Script
-You can also run the quick standalone test script:
+---
+
+## Step 3: Run the Verification Script
+
+You have two ways to run the test:
+
+### Option A: Interactive Prompt (Easiest)
+
+Run the script directly without arguments:
+
+```cmd
+python test_key.py
+```
+
+If no API key is detected, the terminal will prompt you:
+
+```text
+Enter your Anthropic API Key:
+```
+
+Paste your key and press Enter. The script will send a test message ("Hello, world") to Claude and print the response.
+
+### Option B: Set an Environment Variable (Recommended for Security)
+
+Setting an environment variable prevents your key from being typed out or saved in shell history.
+
+On Windows (PowerShell):
+```powershell
+$env:ANTHROPIC_API_KEY="your-api-key-here"
+python test_key.py
+```
+
+On Windows (Command Prompt):
+```cmd
+set ANTHROPIC_API_KEY=your-api-key-here
+python test_key.py
+```
+
+On Linux or macOS:
 ```bash
+export ANTHROPIC_API_KEY="your-api-key-here"
 python test_key.py
 ```
 
 ---
 
+## Step 4: Verify the Output
+
+When your key is valid and active, Claude will return a text response:
+
+```text
+Response from Claude:
+Hello! That's the classic first program output. Are you starting something new, testing things out, or just saying hi? Either way, I'm happy to help with whatever you have in mind.
+```
+
+If the key is invalid or expired, you will receive an authentication error from Anthropic indicating that the key was rejected.
+
+---
+
+## Advanced: Full API Checker Tool
+
+The repository also includes `api_checker.py`, which provides more detailed diagnostics:
+- Validates the key.
+- Measures network latency in milliseconds.
+- Lists all models accessible on your account.
+- Tests token generation.
+
+To run it:
+
+```cmd
+python api_checker.py
+```
+
+---
+
+## Security Notes
+
+1. Never commit API keys to version control.
+2. The included `.gitignore` file automatically excludes `.env` and text files containing keys.
+3. If a key is ever accidentally exposed, revoke it immediately at console.anthropic.com.
+
+---
+
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the MIT License. See LICENSE for details.
